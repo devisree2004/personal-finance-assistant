@@ -1,16 +1,34 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { Card } from '@/ui/card'
 import { Transaction } from '@/App'
 import { format } from 'date-fns'
+import  supabase  from '@/lib/supabaseClient'
 
 const COLORS = ['#dc143c', '#1abc9c', '#f39c12', '#8e44ad', '#e74c3c', '#3498db', '#2ecc71']
 
-interface DashboardProps {
-  transactions: Transaction[]
-}
+ function Dashboard() {
+  const [transactions, setTransactions] = useState<Transaction[]>([])
 
-export function Dashboard({ transactions }: DashboardProps) {
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      const { data, error } = await supabase
+        .from('transactions')
+        .select('*')
+
+      if (error) {
+        console.error('Error fetching transactions:', error)
+      } else {
+        setTransactions(data.map((tx: any) => ({
+          ...tx,
+          date: new Date(tx.date)
+        })))
+      }
+    }
+
+    fetchTransactions()
+  }, [])
+
   const total = useMemo(() => transactions.reduce((sum, tx) => sum + tx.amount, 0), [transactions])
 
   const breakdown = useMemo(() => {
@@ -32,7 +50,7 @@ export function Dashboard({ transactions }: DashboardProps) {
         <p className="text-lg">Total Expenses: ₹{total.toFixed(2)}</p>
         <p className="text-lg">
           Top Category: {breakdown.length > 0 ? breakdown[0].name : 'N/A'} (₹
-          {breakdown.length > 0 ? breakdown[0].value.toFixed(2) : '0'})
+          {breakdown.length > 0 ? breakdown[0].value.toFixed(2) : '0'}))
         </p>
         {mostRecent && (
           <div className="mt-4">
@@ -70,3 +88,4 @@ export function Dashboard({ transactions }: DashboardProps) {
     </div>
   )
 }
+export default Dashboard;
