@@ -20,7 +20,7 @@ function App() {
       <div className="min-h-screen min-w-full bg-background">
         <Nav />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home transactions = {transactions} setTransactions={setTransactions} />} />
           <Route path="/dashboard" element={<Dashboard transactions={transactions} />} />
           <Route path="/budget" element={<BudgetTracker transactions={transactions}/>} />
         </Routes>

@@ -1,12 +1,13 @@
-import { useState } from "react";
 import { Card } from "@/ui/card";
 import { TransactionForm } from "@/pages/TransactionForm";
 import { TransactionList } from "@/pages/TransactionList";
 import { MonthlyExpensesChart } from "@/pages/MonthlyExpensesChart";
 import { Transaction } from "@/App";
-
- function Home() {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+interface HomeProps {
+    transactions: Transaction[];
+    setTransactions: React.Dispatch<React.SetStateAction<Transaction[]>>;
+  }
+ function Home({transactions, setTransactions}: HomeProps) {
 
   const addTransaction = (transaction: Omit<Transaction, "id">) => {
     setTransactions([

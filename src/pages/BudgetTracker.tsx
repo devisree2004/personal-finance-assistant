@@ -12,7 +12,7 @@ interface BudgetTrackerProps {
 export function BudgetTracker({
   transactions,
 }: BudgetTrackerProps) {
-    const [categoryBudgets, setCategoryBudgets] = useState({
+    const [categoryBudgets, setCategoryBudgets] = useState<Record<string, number>>({
         Food: 200,
         Transport: 100,
         Rent: 600,
