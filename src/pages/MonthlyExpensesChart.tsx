@@ -8,7 +8,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-import { format } from 'date-fns';
+import { format, parse } from 'date-fns';
 import type { Transaction } from '@/App';
 
 interface MonthlyExpensesChartProps {
@@ -17,26 +17,23 @@ interface MonthlyExpensesChartProps {
 
 export function MonthlyExpensesChart({ transactions }: MonthlyExpensesChartProps) {
   const monthlyData = useMemo(() => {
-    const data: Record<string, number> = {};
+    const totals: Record<string, number> = {};
 
-    transactions.forEach((transaction) => {
-      const monthKey = format(transaction.date, 'MMM yyyy');
-      data[monthKey] = (data[monthKey] || 0) + transaction.amount;
-    });
+    for (const tx of transactions) {
+      const month = format(tx.date, 'MMM yyyy');
+      totals[month] = (totals[month] || 0) + tx.amount;
+    }
 
-    return Object.entries(data)
-      .map(([month, amount]) => ({
-        month,
-        amount,
-      }))
+    return Object.entries(totals)
+      .map(([month, amount]) => ({ month, amount }))
       .sort((a, b) => {
-        const dateA = new Date(a.month);
-        const dateB = new Date(b.month);
+        const dateA = parse(a.month, 'MMM yyyy', new Date());
+        const dateB = parse(b.month, 'MMM yyyy', new Date());
         return dateA.getTime() - dateB.getTime();
       });
   }, [transactions]);
 
-  if (transactions.length === 0) {
+  if (monthlyData.length === 0) {
     return (
       <div className="flex h-[300px] items-center justify-center text-muted-foreground">
         No data to display

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -37,10 +36,6 @@ interface TransactionFormProps {
 }
 
 export function TransactionForm({ transaction, onSubmit }: TransactionFormProps) {
-  const [date, setDate] = useState<Date | undefined>(
-    transaction?.date || new Date()
-  );
-
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -67,11 +62,11 @@ export function TransactionForm({ transaction, onSubmit }: TransactionFormProps)
                   type="number"
                   step="0.01"
                   placeholder="Enter amount"
-                  {...field}
+                  value={field.value}
                   onChange={(e) => field.onChange(parseFloat(e.target.value))}
                 />
               </FormControl>
-              <FormMessage className='text-red-700'/>
+              <FormMessage className="text-red-700" />
             </FormItem>
           )}
         />
@@ -105,7 +100,7 @@ export function TransactionForm({ transaction, onSubmit }: TransactionFormProps)
                   <Calendar
                     mode="single"
                     selected={field.value}
-                    onSelect={field.onChange}
+                    onSelect={(date) => date && field.onChange(date)}
                     disabled={(date) =>
                       date > new Date() || date < new Date('1900-01-01')
                     }
@@ -113,7 +108,7 @@ export function TransactionForm({ transaction, onSubmit }: TransactionFormProps)
                   />
                 </PopoverContent>
               </Popover>
-              <FormMessage className='text-red-700'/>
+              <FormMessage className="text-red-700" />
             </FormItem>
           )}
         />
@@ -125,9 +120,13 @@ export function TransactionForm({ transaction, onSubmit }: TransactionFormProps)
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Input placeholder="Enter description" {...field} />
+                <Input
+                  placeholder="Enter description"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
               </FormControl>
-              <FormMessage className='text-red-700' />
+              <FormMessage className="text-red-700" />
             </FormItem>
           )}
         />

@@ -39,19 +39,17 @@ export function TransactionList({
   onEdit,
   onDelete,
 }: TransactionListProps) {
-  const [edit, setEdit] = useState<Transaction | null>(
-    null
-  );
+  const [editing, setEditing] = useState<Transaction | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const handleEdit = (transaction: Omit<Transaction, 'id'>) => {
-    if (edit) {
-      onEdit({ ...transaction, id: edit.id });
-      setEdit(null);
+  const handleFormSubmit = (data: Omit<Transaction, 'id'>) => {
+    if (editing) {
+      onEdit({ ...data, id: editing.id });
+      setEditing(null);
     }
   };
 
-  const handleDelete = () => {
+  const confirmDelete = () => {
     if (deletingId) {
       onDelete(deletingId);
       setDeletingId(null);
@@ -60,7 +58,7 @@ export function TransactionList({
 
   if (transactions.length === 0) {
     return (
-      <div className="text-center text-muted-foreground">
+      <div className="text-center text-muted-foreground text-red-700">
         No transactions yet. Add one to get started!
       </div>
     );
@@ -79,27 +77,27 @@ export function TransactionList({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {transactions.map((transaction) => (
-              <TableRow key={transaction.id}>
-                <TableCell>{format(transaction.date, 'PP')}</TableCell>
-                <TableCell>{transaction.description}</TableCell>
+            {transactions.map((tx) => (
+              <TableRow key={tx.id}>
+                <TableCell>{format(tx.date, 'PP')}</TableCell>
+                <TableCell>{tx.description}</TableCell>
                 <TableCell className="text-right">
-                  ${transaction.amount.toFixed(2)}
+                  ${tx.amount.toFixed(2)}
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end space-x-2">
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => setEdit(transaction)}
-                      className='text-red-700 p-4'
+                      onClick={() => setEditing(tx)}
+                      className="text-red-700"
                     >
                       Edit
                     </Button>
                     <Button
                       variant="destructive"
                       size="sm"
-                      onClick={() => setDeletingId(transaction.id)}
+                      onClick={() => setDeletingId(tx.id)}
                     >
                       Delete
                     </Button>
@@ -111,23 +109,22 @@ export function TransactionList({
         </Table>
       </div>
 
-      <Dialog
-        open={!!edit}
-        onOpenChange={(open) => !open && setEdit(null)}
-      >
+      {/* Edit Transaction Dialog */}
+      <Dialog open={!!editing} onOpenChange={(open) => !open && setEditing(null)}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit Transaction</DialogTitle>
           </DialogHeader>
-          {edit && (
+          {editing && (
             <TransactionForm
-              transaction={edit}
-              onSubmit={handleEdit}
+              transaction={editing}
+              onSubmit={handleFormSubmit}
             />
           )}
         </DialogContent>
       </Dialog>
 
+      {/* Delete Confirmation Dialog */}
       <AlertDialog
         open={!!deletingId}
         onOpenChange={(open) => !open && setDeletingId(null)}
@@ -136,12 +133,12 @@ export function TransactionList({
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete the transaction.
+              This action will permanently delete the transaction.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className='text-red-700'>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+            <AlertDialogCancel className="text-red-700">Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete}>Delete</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
