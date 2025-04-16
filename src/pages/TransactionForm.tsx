@@ -1,11 +1,12 @@
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { CalendarIcon } from 'lucide-react';
-import { format } from 'date-fns';
-import { cn } from '@/lib/utils';
-import { Button } from '@/ui/button';
-import { Input } from '@/ui/input';
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { CalendarIcon } from 'lucide-react'
+import { format } from 'date-fns'
+import { cn } from '@/lib/utils'
+import { Button } from '@/ui/button'
+import { Input } from '@/ui/input'
+import { categories } from '@/categories'
 import {
   Form,
   FormControl,
@@ -13,26 +14,34 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/ui/form';
+} from '@/ui/form'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/ui/popover';
-import { Calendar } from '@/ui/calendar';
-import type { Transaction } from '@/App';
+} from '@/ui/popover'
+import { Calendar } from '@/ui/calendar'
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from '@/ui/select'
+import type { Transaction } from '@/App'
 
 const formSchema = z.object({
   amount: z.number().min(0.01, 'Amount must be greater than 0'),
   date: z.date(),
   description: z.string().min(1, 'Description is required'),
-});
+  category: z.enum(categories),
+})
 
-type FormData = z.infer<typeof formSchema>;
+type FormData = z.infer<typeof formSchema>
 
 interface TransactionFormProps {
-  transaction?: Omit<Transaction, 'id'>;
-  onSubmit: (data: Omit<Transaction, 'id'>) => void;
+  transaction?: Omit<Transaction, 'id'>
+  onSubmit: (data: Omit<Transaction, 'id'>) => void
 }
 
 export function TransactionForm({ transaction, onSubmit }: TransactionFormProps) {
@@ -42,15 +51,13 @@ export function TransactionForm({ transaction, onSubmit }: TransactionFormProps)
       amount: transaction?.amount || 0,
       date: transaction?.date || new Date(),
       description: transaction?.description || '',
+      category: transaction?.category || categories[0], // Set default category
     },
-  });
+  })
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-6"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
           name="amount"
@@ -87,27 +94,47 @@ export function TransactionForm({ transaction, onSubmit }: TransactionFormProps)
                         !field.value && 'text-muted-foreground'
                       )}
                     >
-                      {field.value ? (
-                        format(field.value, 'PPP')
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
+                      {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
                       <CalendarIcon className="ml-auto h-4 w-4 opacity-50 text-black" />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent className="w-auto p-0 bg-white shadow-lg bg-opacity-90" align="start">
                   <Calendar
                     mode="single"
                     selected={field.value}
                     onSelect={(date) => date && field.onChange(date)}
-                    disabled={(date) =>
-                      date > new Date() || date < new Date('1900-01-01')
-                    }
+                    disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
                     initialFocus
                   />
                 </PopoverContent>
               </Popover>
+              <FormMessage className="text-red-700" />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="category"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Category</FormLabel>
+              <Select value={field.value} onValueChange={field.onChange}>
+                <FormControl>
+                  <SelectTrigger className="w-full text-black">
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent className='bg-white shadow-lg max-h-60 overflow-auto bg-opacity-95'>
+                  {categories.map((cat) => (
+                    <SelectItem key={cat} value={cat}
+                    className='hover:bg-black/5 cursor-pointer text-black transition-all'>
+                      {cat}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormMessage className="text-red-700" />
             </FormItem>
           )}
@@ -136,5 +163,5 @@ export function TransactionForm({ transaction, onSubmit }: TransactionFormProps)
         </Button>
       </form>
     </Form>
-  );
+  )
 }

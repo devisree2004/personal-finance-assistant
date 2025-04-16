@@ -71,6 +71,7 @@ export function TransactionList({
           <TableHeader>
             <TableRow>
               <TableHead>Date</TableHead>
+              <TableHead>Category</TableHead>
               <TableHead>Description</TableHead>
               <TableHead className="text-right">Amount</TableHead>
               <TableHead className="text-right">Actions</TableHead>
@@ -80,6 +81,7 @@ export function TransactionList({
             {transactions.map((tx) => (
               <TableRow key={tx.id}>
                 <TableCell>{format(tx.date, 'PP')}</TableCell>
+                <TableCell>{tx.category}</TableCell>
                 <TableCell>{tx.description}</TableCell>
                 <TableCell className="text-right">
                   ${tx.amount.toFixed(2)}
@@ -109,7 +111,6 @@ export function TransactionList({
         </Table>
       </div>
 
-      {/* Edit Transaction Dialog */}
       <Dialog open={!!editing} onOpenChange={(open) => !open && setEditing(null)}>
         <DialogContent>
           <DialogHeader>
@@ -124,7 +125,6 @@ export function TransactionList({
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation Dialog */}
       <AlertDialog
         open={!!deletingId}
         onOpenChange={(open) => !open && setDeletingId(null)}
