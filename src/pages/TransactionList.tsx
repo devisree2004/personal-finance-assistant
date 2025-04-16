@@ -7,13 +7,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/ui/table';
+} from '../ui/table';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/ui/dialog';
+} from '../ui/dialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,10 +23,10 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/ui/alert-dialog';
-import { Button } from '@/ui/button';
+} from '../ui/alert-dialog';
+import { Button } from '../ui/button';
 import { TransactionForm } from './TransactionForm';
-import type { Transaction } from '@/App';
+import type { Transaction } from '../App';
 
 interface TransactionListProps {
   transactions: Transaction[];

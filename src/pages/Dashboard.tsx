@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts'
-import { Card } from '@/ui/card'
-import { Transaction } from '@/App'
+import { Card } from '../ui/card'
+import { Transaction } from '../App'
 import { format } from 'date-fns'
-import  supabase  from '@/lib/supabaseClient'
+import  supabase  from '../lib/supabaseClient'
 
 const COLORS = ['#dc143c', '#1abc9c', '#f39c12', '#8e44ad', '#e74c3c', '#3498db', '#2ecc71']
 

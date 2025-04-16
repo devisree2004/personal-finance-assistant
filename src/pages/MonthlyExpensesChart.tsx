@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { format, parse } from 'date-fns';
-import type { Transaction } from '@/App';
+import type { Transaction } from '../App';
 
 interface MonthlyExpensesChartProps {
   transactions: Transaction[];

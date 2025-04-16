@@ -3,10 +3,10 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CalendarIcon } from 'lucide-react'
 import { format } from 'date-fns'
-import { cn } from '@/lib/utils'
-import { Button } from '@/ui/button'
-import { Input } from '@/ui/input'
-import { categories } from '@/categories'
+import { cn } from '../lib/utils'
+import { Button } from '../ui/button'
+import { Input } from '../ui/input'
+import { categories } from '../categories'
 import {
   Form,
   FormControl,
@@ -14,21 +14,21 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/ui/form'
+} from '../ui/form'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/ui/popover'
-import { Calendar } from '@/ui/calendar'
+} from '../ui/popover'
+import { Calendar } from '../ui/calendar'
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
-} from '@/ui/select'
-import type { Transaction } from '@/App'
+} from '../ui/select'
+import type { Transaction } from '../App'
 
 const formSchema = z.object({
   amount: z.number().min(0.01, 'Amount must be greater than 0'),

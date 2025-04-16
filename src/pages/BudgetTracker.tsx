@@ -1,9 +1,9 @@
-import { Card } from '@/ui/card';
+import { Card } from '../ui/card';
 import { useState } from 'react';
 import { BudgetComparisonChart } from './BudgetComparisionChart';
 import SpendingInsights from './SpendingInsights';
 import { CategoryBudgetsForm } from './CategoryBudgetsForm';
-import { Transaction } from '@/App';
+import { Transaction } from '../App';
 
 interface BudgetTrackerProps {
   transactions: Transaction[];

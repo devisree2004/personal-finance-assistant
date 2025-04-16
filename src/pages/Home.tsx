@@ -1,9 +1,9 @@
-import { Card } from "@/ui/card";
-import { TransactionForm } from "@/pages/TransactionForm";
-import { TransactionList } from "@/pages/TransactionList";
-import { MonthlyExpensesChart } from "@/pages/MonthlyExpensesChart";
-import { Transaction } from "@/App";
-import supabase from '@/lib/supabaseClient';
+import { Card } from "../ui/card";
+import { TransactionForm } from "../pages/TransactionForm";
+import { TransactionList } from "../pages/TransactionList";
+import { MonthlyExpensesChart } from "../pages/MonthlyExpensesChart";
+import { Transaction } from "../App";
+import supabase from '../lib/supabaseClient';
 import { useEffect } from "react";
 import { toast } from 'react-hot-toast';
 

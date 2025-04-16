@@ -1,5 +1,5 @@
-import { Progress } from "@/ui/progress";
-import { Card } from "@/ui/card";
+import { Progress } from "../ui/progress";
+import { Card } from "../ui/card";
 
 interface SpendingInsightsProps {
   categoryBudgets: Record<string, number>;
