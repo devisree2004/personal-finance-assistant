@@ -6,9 +6,9 @@
   ],
   "compilerOptions": {
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*",
-              "vite-env.d.ts"]
-    }
+   "paths": {
+  "@/*": ["./src/*", "vite-env.d.ts"]
+}
+
   }
 }

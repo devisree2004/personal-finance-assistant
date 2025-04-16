@@ -5,7 +5,7 @@ import { MonthlyExpensesChart } from "@/pages/MonthlyExpensesChart";
 import { Transaction } from "@/App";
 import supabase from '@/lib/supabaseClient';
 import { useEffect } from "react";
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 
 
 interface HomeProps {
