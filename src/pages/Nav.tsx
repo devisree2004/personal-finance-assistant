@@ -22,7 +22,7 @@ import { BarChart } from "lucide-react";
             key={name}
             to={path}
             className={`text-base font-medium hover:text-primary ${
-              pathname === path ? "text-primary underline" : "text-gray-600"
+              pathname === path ? "text-primary" : "text-gray-500"
             }`}
           >
             {name}

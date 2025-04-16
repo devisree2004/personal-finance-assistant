@@ -99,7 +99,7 @@ export function TransactionForm({ transaction, onSubmit }: TransactionFormProps)
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0 bg-white shadow-lg bg-opacity-90" align="start">
+                <PopoverContent className="w-auto p-0 bg-white shadow-lg bg-opacity-95" align="start">
                   <Calendar
                     mode="single"
                     selected={field.value}

@@ -27,7 +27,7 @@ interface HomeProps {
   };
 
   return (
-    <div className="mx-auto max-w-7xl mt-10 space-y-8 p-4 md:p-8">
+    <div className="mx-auto max-w-7xl mt-5 space-y-8 p-4 md:p-8">
       <div className="grid gap-8 md:grid-cols-2">
         <Card className="p-6">
           <h2 className="mb-6 text-2xl font-semibold">Add Transaction</h2>
