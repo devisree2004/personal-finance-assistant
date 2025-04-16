@@ -5,7 +5,6 @@ A simple web app to track expenses, visualize spending, and manage budgets.
 **Live Site**: [Vercel](https://finance-tracker-bg4y.vercel.app/)
 **Git Hub** : [GitHub](https://github.com/danixDe/Finance_Tracker/).
 
----
 
 ## Features
 
@@ -16,7 +15,7 @@ A simple web app to track expenses, visualize spending, and manage budgets.
 - Budget vs actual comparison
 - Basic spending insights
 
----
+
 
 ## Tech Stack
 
@@ -25,7 +24,7 @@ A simple web app to track expenses, visualize spending, and manage budgets.
 - React Router DOM
 - Lucide React for icons
 
----
+
 
 ## Project Structure
 
@@ -39,7 +38,6 @@ src/
 └── index.tsx             # Entry point
 ```
 
----
 
 ## Setup Instructions
 
@@ -47,4 +45,3 @@ src/
 2. Run `npm install`  
 3. Run `npm run dev` to start the app locally
 
----
