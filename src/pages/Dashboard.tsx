@@ -1,47 +1,69 @@
-import { useEffect, useMemo, useState } from 'react'
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts'
-import { Card } from '../ui/card'
-import { Transaction } from '../App'
-import { format } from 'date-fns'
-import  supabase  from '../lib/supabaseClient'
+import { useEffect, useMemo, useState } from 'react';
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
+import { Card } from '../ui/card';
+import { Transaction } from '../App';
+import { format } from 'date-fns';
+import { fetchTransactions } from '../lib/api'; // ✅ use your custom backend
 
-const COLORS = ['#dc143c', '#1abc9c', '#f39c12', '#8e44ad', '#e74c3c', '#3498db', '#2ecc71']
+const COLORS = [
+  '#dc143c',
+  '#1abc9c',
+  '#f39c12',
+  '#8e44ad',
+  '#e74c3c',
+  '#3498db',
+  '#2ecc71',
+];
 
- function Dashboard() {
-  const [transactions, setTransactions] = useState<Transaction[]>([])
+function Dashboard() {
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   useEffect(() => {
-    const fetchTransactions = async () => {
-      const { data, error } = await supabase
-        .from('transactions')
-        .select('*')
-
-      if (error) {
-        console.error('Error fetching transactions:', error)
-      } else {
-        setTransactions(data.map((tx: any) => ({
-          ...tx,
-          date: new Date(tx.date)
-        })))
+    const load = async () => {
+      try {
+        const data = await fetchTransactions();
+        setTransactions(
+          data.map((tx) => ({
+            ...tx,
+            date: new Date(tx.date),
+          }))
+        );
+      } catch (error) {
+        console.error('Error fetching transactions:', error);
       }
-    }
+    };
 
-    fetchTransactions()
-  }, [])
+    load();
+  }, []);
 
-  const total = useMemo(() => transactions.reduce((sum, tx) => sum + tx.amount, 0), [transactions])
+  const total = useMemo(
+    () => transactions.reduce((sum, tx) => sum + tx.amount, 0),
+    [transactions]
+  );
 
   const breakdown = useMemo(() => {
-    const map = new Map<string, number>()
+    const map = new Map<string, number>();
     transactions.forEach((tx) => {
-      map.set(tx.category, (map.get(tx.category) || 0) + tx.amount)
-    })
-    return Array.from(map.entries()).map(([category, value]) => ({ name: category, value }))
-  }, [transactions])
+      map.set(tx.category, (map.get(tx.category) || 0) + tx.amount);
+    });
+    return Array.from(map.entries()).map(([category, value]) => ({
+      name: category,
+      value,
+    }));
+  }, [transactions]);
 
   const mostRecent = useMemo(() => {
-    return [...transactions].sort((a, b) => b.date.getTime() - a.date.getTime())[0]
-  }, [transactions])
+    return [...transactions].sort(
+      (a, b) => b.date.getTime() - a.date.getTime()
+    )[0];
+  }, [transactions]);
 
   return (
     <div className="grid gap-6 md:grid-cols-2 mt-10 p-4">
@@ -49,8 +71,9 @@ const COLORS = ['#dc143c', '#1abc9c', '#f39c12', '#8e44ad', '#e74c3c', '#3498db'
         <h2 className="text-xl font-semibold mb-4">Summary</h2>
         <p className="text-lg">Total Expenses: ₹{total.toFixed(2)}</p>
         <p className="text-lg">
-          Top Category: {breakdown.length > 0 ? breakdown[0].name : 'N/A'} (₹
-          {breakdown.length > 0 ? breakdown[0].value.toFixed(2) : '0'}))
+          Top Category:{' '}
+          {breakdown.length > 0 ? breakdown[0].name : 'N/A'} (₹
+          {breakdown.length > 0 ? breakdown[0].value.toFixed(2) : '0'})
         </p>
         {mostRecent && (
           <div className="mt-4">
@@ -77,7 +100,10 @@ const COLORS = ['#dc143c', '#1abc9c', '#f39c12', '#8e44ad', '#e74c3c', '#3498db'
               label
             >
               {breakdown.map((_, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                />
               ))}
             </Pie>
             <Tooltip />
@@ -86,6 +112,7 @@ const COLORS = ['#dc143c', '#1abc9c', '#f39c12', '#8e44ad', '#e74c3c', '#3498db'
         </ResponsiveContainer>
       </Card>
     </div>
-  )
+  );
 }
+
 export default Dashboard;

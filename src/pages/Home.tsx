@@ -3,10 +3,12 @@ import { TransactionForm } from "../pages/TransactionForm";
 import { TransactionList } from "../pages/TransactionList";
 import { MonthlyExpensesChart } from "../pages/MonthlyExpensesChart";
 import { Transaction } from "../App";
-import supabase from '../lib/supabaseClient';
 import { useEffect } from "react";
 import { toast } from 'react-hot-toast';
-
+import {
+  fetchTransactions as loadTransactions,
+  addTransaction as createTransaction,
+} from "../lib/api";
 
 interface HomeProps {
   transactions: Transaction[];
@@ -14,55 +16,43 @@ interface HomeProps {
 }
 
 function Home({ transactions, setTransactions }: HomeProps) {
+  // Fetch all transactions from backend
   const fetchTransactions = async () => {
-    const { data, error } = await supabase.from('transactions').select('*');
-    if (error) {
+    try {
+      const data = await loadTransactions();
+      setTransactions(data);
+    } catch (error) {
+      toast.error("Failed to fetch transactions");
       console.error(error);
-    } else {
-      setTransactions(data || []);
     }
   };
 
+  // Add a new transaction using backend API
+  const addTransaction = async (transaction: Omit<Transaction, "id">) => {
+    try {
+      await createTransaction(transaction);
+      toast.success("Transaction added");
+      fetchTransactions();
+    } catch (error) {
+      toast.error("Failed to add transaction");
+      console.error(error);
+    }
+  };
+
+  // Placeholder for future edit feature
+  const editTransaction = async (transaction: Transaction) => {
+    console.warn("Edit feature not implemented yet.");
+  };
+
+  // Placeholder for future delete feature
+  const deleteTransaction = async (id: string) => {
+    console.warn("Delete feature not implemented yet.");
+  };
+
+  // Load data on first render
   useEffect(() => {
     fetchTransactions();
   }, []);
-
-  const addTransaction = async (transaction: Omit<Transaction, "id">) => {
-    const { error } = await supabase.from('transactions').insert([transaction]);
-    if (error) {
-      toast.error("Failed to add transaction");
-      console.error(error);
-    } else {
-      toast.success("Transaction added");
-      fetchTransactions();
-    }
-  };
-  
-  const editTransaction = async (transaction: Transaction) => {
-    const { error } = await supabase.from('transactions')
-      .update(transaction)
-      .eq('id', transaction.id);
-  
-    if (error) {
-      toast.error("Failed to update transaction");
-      console.error(error);
-    } else {
-      toast.success("Transaction updated");
-      fetchTransactions();
-    }
-  };
-  
-  const deleteTransaction = async (id: string) => {
-    const { error } = await supabase.from('transactions').delete().eq('id', id);
-    if (error) {
-      toast.error("Failed to delete transaction");
-      console.error(error);
-    } else {
-      toast.success("Transaction deleted");
-      fetchTransactions();
-    }
-  };
-  
 
   return (
     <div className="mx-auto max-w-7xl mt-5 space-y-8 p-4 md:p-8">

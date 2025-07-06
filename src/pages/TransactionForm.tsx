@@ -30,11 +30,15 @@ import {
 } from '../ui/select'
 import type { Transaction } from '../App'
 
+// ✅ Extend the schema to include 'type'
 const formSchema = z.object({
   amount: z.number().min(0.01, 'Amount must be greater than 0'),
   date: z.date(),
   description: z.string().min(1, 'Description is required'),
   category: z.enum(categories),
+  type: z.enum(['income', 'expense'], {
+    errorMap: () => ({ message: 'Type is required' }),
+  }),
 })
 
 type FormData = z.infer<typeof formSchema>
@@ -51,13 +55,16 @@ export function TransactionForm({ transaction, onSubmit }: TransactionFormProps)
       amount: transaction?.amount || 0,
       date: transaction?.date || new Date(),
       description: transaction?.description || '',
-      category: transaction?.category || categories[0], // Set default category
+      category: transaction?.category || categories[0],
+      type: transaction?.type || 'expense', // ✅ Default to 'expense'
     },
   })
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+
+        {/* Amount */}
         <FormField
           control={form.control}
           name="amount"
@@ -78,6 +85,7 @@ export function TransactionForm({ transaction, onSubmit }: TransactionFormProps)
           )}
         />
 
+        {/* Date */}
         <FormField
           control={form.control}
           name="date"
@@ -114,6 +122,7 @@ export function TransactionForm({ transaction, onSubmit }: TransactionFormProps)
           )}
         />
 
+        {/* Category */}
         <FormField
           control={form.control}
           name="category"
@@ -128,8 +137,7 @@ export function TransactionForm({ transaction, onSubmit }: TransactionFormProps)
                 </FormControl>
                 <SelectContent className='bg-white shadow-lg max-h-60 overflow-auto bg-opacity-95'>
                   {categories.map((cat) => (
-                    <SelectItem key={cat} value={cat}
-                    className='hover:bg-black/5 cursor-pointer text-black transition-all'>
+                    <SelectItem key={cat} value={cat} className='hover:bg-black/5 cursor-pointer text-black transition-all'>
                       {cat}
                     </SelectItem>
                   ))}
@@ -140,6 +148,30 @@ export function TransactionForm({ transaction, onSubmit }: TransactionFormProps)
           )}
         />
 
+        {/* Type (income/expense) */}
+        <FormField
+          control={form.control}
+          name="type"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Type</FormLabel>
+              <Select value={field.value} onValueChange={field.onChange}>
+                <FormControl>
+                  <SelectTrigger className="w-full text-black">
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent className='bg-white shadow-lg bg-opacity-95'>
+                  <SelectItem value="income" className='text-black'>Income</SelectItem>
+                  <SelectItem value="expense" className='text-black'>Expense</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage className="text-red-700" />
+            </FormItem>
+          )}
+        />
+
+        {/* Description */}
         <FormField
           control={form.control}
           name="description"
@@ -158,6 +190,7 @@ export function TransactionForm({ transaction, onSubmit }: TransactionFormProps)
           )}
         />
 
+        {/* Submit */}
         <Button type="submit" className="w-full">
           {transaction ? 'Update' : 'Add'} Transaction
         </Button>
